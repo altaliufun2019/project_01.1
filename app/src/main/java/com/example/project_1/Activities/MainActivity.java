@@ -59,14 +59,14 @@ public class MainActivity extends AppCompatActivity {
         get.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessageController.INSTANCE.get();
+                MessageController.INSTANCE.fetch(false);
             }
         });
 
         refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessageController.INSTANCE.refresh();
+                MessageController.INSTANCE.fetch(true);
             }
         });
     }
