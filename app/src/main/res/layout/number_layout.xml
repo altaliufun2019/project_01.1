@@ -28,16 +28,14 @@
                 android:id="@+id/data_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="abbb" />
+                android:layout_margin="10dp" />
 
             <TextView
                 android:id="@+id/time_holder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="10dp"
-                android:text="alsdf" />
+                android:layout_margin="10dp" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -6,18 +6,18 @@ import java.lang.Exception
 import java.util.concurrent.CountDownLatch
 
 class DispatchQueue(mThreadName: String): Thread() {
-    lateinit var handler: Handler
-    val latch: CountDownLatch = CountDownLatch(1)
+    private lateinit var handler: Handler
+    private val latch: CountDownLatch = CountDownLatch(1)
 
     init {
         name = mThreadName
         start()
     }
 
-    fun post(message: Message) {
+    fun post(job: Runnable) {
         try{
             latch.await()
-            handler.post(message.job)
+            handler.post(job)
         } catch (e: Exception){
         }
     }

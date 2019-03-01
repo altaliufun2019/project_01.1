@@ -34,7 +34,7 @@ class DataNumberAdapter(var mData: List<DataNumber>) : RecyclerView.Adapter<Data
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val data: DataNumber = mData[position]
         viewHolder.data_number.text = data.number.toString()
-        viewHolder.date.text = Constants.formatter.format(data.date)!!
+        viewHolder.date.text = Constants.FORMATTER.format(data.date)!!
     }
 
     override fun getItemCount(): Int {

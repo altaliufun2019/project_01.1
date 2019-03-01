@@ -1,12 +1,15 @@
 package com.example.project_1.Activities;
 
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.project_1.Constants.Constants;
+import com.example.project_1.Managers.NotificationCenter;
 import com.example.project_1.UIComponents.DataAdapter.DataNumber;
 import com.example.project_1.UIComponents.DataAdapter.DataNumberAdapter;
 import com.example.project_1.Managers.MessageController;
@@ -15,7 +18,7 @@ import com.example.project_1.R;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NotificationCenter.NotificationTarget {
     private Button clear;
     private Button get;
     private Button refresh;
@@ -23,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NotificationCenter.getInstance().register(this, Constants.Tasks.INSTANCE.getFETCH_DATA());
         setContentView(R.layout.activity_main);
-
         initializeRecyclerView();
         initializeButtons();
 
@@ -69,6 +72,12 @@ public class MainActivity extends AppCompatActivity {
                 MessageController.INSTANCE.fetch(true);
             }
         });
+    }
+
+    @Override
+    public void notified(int taskID) {
+        if(taskID == Constants.Tasks.INSTANCE.getFETCH_DATA())
+        MessageController.INSTANCE.changeData();
     }
 
 }
