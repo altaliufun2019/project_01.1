@@ -1,5 +1,6 @@
 package com.example.project_1.Managers;
 
+import android.app.Application;
 import android.support.annotation.NonNull;
 
 import com.example.project_1.Managers.MessageControllers.DispatchQueue;

@@ -4,4 +4,6 @@
     <string name="refresh_button">refresh</string>
     <string name="get_button">get</string>
     <string name="box_view_title">data number</string>
+    <string name="settings">settings</string>
+    <string name="help">help</string>
 </resources>

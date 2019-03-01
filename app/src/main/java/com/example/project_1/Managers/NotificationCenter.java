@@ -4,23 +4,20 @@ import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
-import com.example.project_1.Activities.MainActivity;
 import com.example.project_1.Constants.Constants;
 
-import java.lang.reflect.Field;
-import java.sql.Types;
 import java.util.ArrayList;
-
-import kotlin.jvm.internal.Reflection;
 
 public class NotificationCenter {
     private static final NotificationCenter INSTANCE = new NotificationCenter();
-    public static final int DATA_LOADING = Constants.Tasks.INSTANCE.getFETCH_DATA();
+    public static final int DATA_LOADING = Constants.Tasks.FETCH_DATA;
+    public static final int CONNECTION_CHANGE = Constants.Tasks.CONNECTION_CHANGE;
     private SparseArray<ArrayList<Object>> observers = new SparseArray<>();
     private ArrayList<Integer> allowedTasks = new ArrayList<>();
 
     private NotificationCenter(){
-        allowedTasks.add(Constants.Tasks.INSTANCE.getFETCH_DATA());
+        allowedTasks.add(Constants.Tasks.FETCH_DATA);
+        allowedTasks.add(Constants.Tasks.CONNECTION_CHANGE);
     }
 
     public static NotificationCenter getInstance() {
@@ -37,6 +34,12 @@ public class NotificationCenter {
         return false;
     }
 
+    public void conn_changed() {
+        int taskID = NotificationCenter.CONNECTION_CHANGE;
+        for(Object observer: observers.get(taskID)) {
+            ((NotificationTarget) observer).notified(taskID);
+        }
+    }
 
     public void data_loaded() {
         int taskID = NotificationCenter.DATA_LOADING;

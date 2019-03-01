@@ -13,9 +13,9 @@ object ConnectionManager {
 
     fun load(n: Int){
         mQueue.post( Runnable {
-            val response_data = _load(n)
+            val response = _load(n)
             mainHandler.post{
-                MessageController.onTransactionComplete(response_data, Constants.Tasks.GET_DATA)
+                MessageController.onTransactionComplete(response, Constants.Tasks.GET_DATA)
             }
         })
     }

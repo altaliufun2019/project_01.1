@@ -7,9 +7,10 @@ object Constants {
     val FORMATTER = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
 
     object Tasks {
-        val FETCH_DATA = 1
-        val GET_DATA = 2
-        val REFRESH_DATA = 3
-        val CLEAR_DATA = 4
+        const val FETCH_DATA = 1
+        const val GET_DATA = 2
+        const val REFRESH_DATA = 3
+        const val CLEAR_DATA = 4
+        const val CONNECTION_CHANGE = 5
     }
 }
