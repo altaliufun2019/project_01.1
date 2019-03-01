@@ -2,4 +2,4 @@ package com.example.project_1.UIComponents.DataAdapter
 
 import java.util.*
 
-class DataNumber(var number: Int, var date: Date)
+class DataNumber(var id: Int, var date: Date)

@@ -13,6 +13,7 @@ object ConnectionManager {
 
     fun load(n: Int){
         mQueue.post( Runnable {
+            MessageController.runningTransactions++
             val response = _load(n)
             mainHandler.post{
                 MessageController.onTransactionComplete(response, Constants.Tasks.GET_DATA)
@@ -21,6 +22,11 @@ object ConnectionManager {
     }
 
     private fun _load(n: Int): List<DataNumber> {
+        // TODO: for similar functionality to project's main idea, needs to be commented
+        while (MessageController.runningTransactions != 1){
+        }
+        val n = MessageController.lastData
+
         Thread.sleep(500)
         val new_list = List(10){index -> DataNumber(index + n + 1, Date()) }
         return new_list

@@ -16,10 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.project_1.Constants.Constants;
-import com.example.project_1.Managers.ActiveConnection;
 import com.example.project_1.Managers.NotificationCenter;
 import com.example.project_1.UIComponents.DataAdapter.DataNumber;
 import com.example.project_1.UIComponents.DataAdapter.DataNumberAdapter;
@@ -27,7 +27,6 @@ import com.example.project_1.Managers.MessageController;
 import com.example.project_1.R;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements NotificationCenter.NotificationTarget {
     private Button clear;
@@ -51,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         initializeButtons();
         hasConnection();
         connectionChanged();
+
     }
 
     @Override
@@ -113,9 +113,6 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     private void initializeRecyclerView(){
         RecyclerView rvData = findViewById(R.id.numList);
         ArrayList<DataNumber> dataNumbers = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            dataNumbers.add(new DataNumber(i, new Date()));
-        }
         DataNumberAdapter adapter = new DataNumberAdapter(dataNumbers);
         rvData.setAdapter(adapter);
         rvData.setLayoutManager(new LinearLayoutManager(this));
@@ -156,9 +153,13 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     }
 
     private void connectionChanged() {
-        if (!isConnected)
+        if (!isConnected) {
             Glide.with(this).load(R.drawable.loading).into((ImageView) findViewById(R.id.ivtest));
-        else
+            ((TextView) findViewById(R.id.connecting)).setText(" connecting...");
+        }
+        else {
             ((ImageView) findViewById(R.id.ivtest)).setImageResource(0);
+            ((TextView) findViewById(R.id.connecting)).setText("");
+        }
     }
 }
