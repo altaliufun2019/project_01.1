@@ -1,4 +1,4 @@
-package com.example.project_1
+package com.example.project_1.UIComponents.DataAdapter
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.example.project_1.Constants.Constants
+import com.example.project_1.R
 
 class DataNumberAdapter(var mData: List<DataNumber>) : RecyclerView.Adapter<DataNumberAdapter.ViewHolder>() {
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -21,7 +23,7 @@ class DataNumberAdapter(var mData: List<DataNumber>) : RecyclerView.Adapter<Data
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataNumberAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val context: Context = parent.context
         val inflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -29,7 +31,7 @@ class DataNumberAdapter(var mData: List<DataNumber>) : RecyclerView.Adapter<Data
         return ViewHolder(dataView)
     }
 
-    override fun onBindViewHolder(viewHolder: DataNumberAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val data: DataNumber = mData[position]
         viewHolder.data_number.text = data.number.toString()
         viewHolder.date.text = Constants.formatter.format(data.date)!!

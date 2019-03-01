@@ -1,4 +1,4 @@
-package com.example.project_1;
+package com.example.project_1.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
-import java.time.LocalDateTime;
+import com.example.project_1.UIComponents.DataAdapter.DataNumber;
+import com.example.project_1.UIComponents.DataAdapter.DataNumberAdapter;
+import com.example.project_1.Managers.MessageController;
+import com.example.project_1.R;
+
 import java.util.ArrayList;
 import java.util.Date;
 
