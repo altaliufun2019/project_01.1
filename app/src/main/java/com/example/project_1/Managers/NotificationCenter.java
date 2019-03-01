@@ -7,7 +7,11 @@ import android.util.SparseArray;
 import com.example.project_1.Activities.MainActivity;
 import com.example.project_1.Constants.Constants;
 
+import java.lang.reflect.Field;
+import java.sql.Types;
 import java.util.ArrayList;
+
+import kotlin.jvm.internal.Reflection;
 
 public class NotificationCenter {
     private static final NotificationCenter INSTANCE = new NotificationCenter();
@@ -28,7 +32,8 @@ public class NotificationCenter {
     }
 
     public Boolean addTask(int taskID) {
-        // TODO
+        allowedTasks.add(taskID);
+        System.out.println("success");
         return false;
     }
 

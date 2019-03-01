@@ -1,5 +1,8 @@
 package com.example.project_1.Managers
 
+import android.content.Context
+import android.net.ConnectivityManager
+import com.example.project_1.Activities.MainActivity
 import com.example.project_1.Constants.Constants
 import com.example.project_1.UIComponents.DataAdapter.DataNumber
 import com.example.project_1.UIComponents.DataAdapter.DataNumberAdapter
@@ -8,7 +11,7 @@ import java.util.ArrayList
 object MessageController {
     lateinit var mAdapter: DataNumberAdapter
     // why exactly do we have this??
-    val mData: MutableList<DataNumber> = emptyList<DataNumber>().toMutableList()
+    private val mData: MutableList<DataNumber> = emptyList<DataNumber>().toMutableList()
 
     fun clear() {
         mAdapter.mData = emptyList()
@@ -26,7 +29,7 @@ object MessageController {
             StorageManager.getInstance().load()
         }
         else {
-            ConnectionManager.load(if(!mData.isEmpty()) mData.last().number else 0 )
+            ConnectionManager.load(if(!mData.isEmpty()) mData.last().number else 0)
         }
     }
 

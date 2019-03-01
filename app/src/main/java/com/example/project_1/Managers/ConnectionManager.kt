@@ -21,7 +21,7 @@ object ConnectionManager {
     }
 
     private fun _load(n: Int): List<DataNumber> {
-        Thread.sleep(5000)
+        Thread.sleep(500)
         val new_list = List(10){index -> DataNumber(index + n + 1, Date()) }
         return new_list
     }

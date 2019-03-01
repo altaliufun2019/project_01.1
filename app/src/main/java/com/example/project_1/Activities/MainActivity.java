@@ -1,5 +1,8 @@
 package com.example.project_1.Activities;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +33,12 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         setContentView(R.layout.activity_main);
         initializeRecyclerView();
         initializeButtons();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        NotificationCenter.getInstance().unregister(this, Constants.Tasks.INSTANCE.getFETCH_DATA());
     }
 
     // initializing and creating recycler view
@@ -62,7 +70,10 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         get.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MessageController.INSTANCE.fetch(false);
+                if(hasConnection())
+                    MessageController.INSTANCE.fetch(false);
+                else
+                    MessageController.INSTANCE.fetch(true);
             }
         });
 
@@ -78,6 +89,13 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     public void notified(int taskID) {
         if(taskID == Constants.Tasks.INSTANCE.getFETCH_DATA())
         MessageController.INSTANCE.changeData();
+    }
+
+    private boolean hasConnection(){
+        Context context = getApplicationContext();
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        return info != null && info.isConnected();
     }
 
 }
