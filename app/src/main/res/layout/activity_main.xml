@@ -32,7 +32,7 @@
                 android:id="@+id/connecting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""/>
+                android:text=" connecting..."/>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>

@@ -27,7 +27,7 @@ object ConnectionManager {
         }
         val n = MessageController.lastData
 
-        Thread.sleep(500)
+        Thread.sleep(100)
         val new_list = List(10){index -> DataNumber(index + n + 1, Date()) }
         return new_list
     }

@@ -1,9 +1,15 @@
 package com.example.project_1.Activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.Image;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
+import android.net.NetworkRequest;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -32,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     private Button clear;
     private Button get;
     private Button refresh;
-    public static Boolean isConnected = true;
+    private ConnectionMonitor monitor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,14 +54,14 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
 
         initializeRecyclerView();
         initializeButtons();
-        hasConnection();
-        connectionChanged();
 
+        monitor = new ConnectionMonitor();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        monitor.disable();
         NotificationCenter.getInstance().unregister(this, Constants.Tasks.FETCH_DATA);
     }
 
@@ -66,33 +72,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
             case Constants.Tasks.FETCH_DATA:
                 MessageController.INSTANCE.changeData();
                 break;
-            case Constants.Tasks.CONNECTION_CHANGE:
-                connectionChanged();
-
         }
-    }
-
-    private void hasConnection(){
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(true){
-                    Context context = getApplicationContext();
-                    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo info = cm.getActiveNetworkInfo();
-                    if (isConnected != (info != null && info.isConnected())) {
-                        isConnected = !isConnected;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                NotificationCenter.getInstance().conn_changed();
-                            }
-                        });
-                    }
-                }
-            }
-        });
-        t.start();
     }
 
     @Override
@@ -112,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     // initializing and creating recycler view
     private void initializeRecyclerView(){
         RecyclerView rvData = findViewById(R.id.numList);
-        ArrayList<DataNumber> dataNumbers = new ArrayList<>();
+        ArrayList<DataNumber> dataNumbers = (ArrayList<DataNumber>) MessageController.INSTANCE.getMData();
         DataNumberAdapter adapter = new DataNumberAdapter(dataNumbers);
         rvData.setAdapter(adapter);
         rvData.setLayoutManager(new LinearLayoutManager(this));
@@ -135,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         get.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isConnected) {
+                if(monitor.getConnection()) {
                     MessageController.INSTANCE.fetch(false);
                 }
                 else {
@@ -152,14 +132,98 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
         });
     }
 
-    private void connectionChanged() {
-        if (!isConnected) {
-            Glide.with(this).load(R.drawable.loading).into((ImageView) findViewById(R.id.ivtest));
-            ((TextView) findViewById(R.id.connecting)).setText(" connecting...");
+    /**
+     * a monitor class for network connectivity
+     */
+    private class ConnectionMonitor extends ConnectivityManager.NetworkCallback{
+        final private NetworkRequest networkRequest;
+        private Context context;
+        private Boolean isConnected = false;
+
+        ConnectionMonitor() {
+            networkRequest = new NetworkRequest.Builder()
+                    .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
+                    .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
+                    .build();
+            enable(MainActivity.this);
         }
-        else {
-            ((ImageView) findViewById(R.id.ivtest)).setImageResource(0);
-            ((TextView) findViewById(R.id.connecting)).setText("");
+
+        Boolean getConnection() {
+            return isConnected;
+        }
+
+        void enable(Context context) {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            cm.registerNetworkCallback(networkRequest, this);
+            this.context = context;
+            NetworkInfo network = cm.getActiveNetworkInfo();
+            if (network == null || !network.isConnected())
+                Glide.with(context).load(R.drawable.loading).into((ImageView) findViewById(R.id.ivtest));
+        }
+
+        void disable() {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            cm.unregisterNetworkCallback(this);
+            this.context = null;
+        }
+
+        @Override
+        public void onAvailable(Network network) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    isConnected = true;
+                    ((ImageView) findViewById(R.id.ivtest)).setImageResource(0);
+                    ((TextView) findViewById(R.id.connecting)).setText("");
+                }
+            });
+        }
+
+        @Override
+        public void onLost(Network network) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    isConnected = false;
+                    Glide.with(context).load(R.drawable.loading).into((ImageView) findViewById(R.id.ivtest));
+                    ((TextView) findViewById(R.id.connecting)).setText(" connecting...");
+                }
+            });
         }
     }
+
+    // a self defined way to check connectivity
+//    private void hasConnection(){
+//        Thread t = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                while(true){
+//                    Context context = getApplicationContext();
+//                    ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//                    NetworkInfo info = cm.getActiveNetworkInfo();
+//                    if (isConnected != (info != null && info.isConnected())) {
+//                        isConnected = !isConnected;
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                NotificationCenter.getInstance().conn_changed();
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        });
+//        t.start();
+//    }
+
+//    private void connectionChanged() {
+//        if (!isConnected) {
+//            Glide.with(this).load(R.drawable.loading).into((ImageView) findViewById(R.id.ivtest));
+//            ((TextView) findViewById(R.id.connecting)).setText(" connecting...");
+//        }
+//        else {
+//            ((ImageView) findViewById(R.id.ivtest)).setImageResource(0);
+//            ((TextView) findViewById(R.id.connecting)).setText("");
+//        }
+//    }
 }

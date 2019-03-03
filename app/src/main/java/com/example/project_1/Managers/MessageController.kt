@@ -7,12 +7,15 @@ import java.util.ArrayList
 
 object MessageController {
     lateinit var mAdapter: DataNumberAdapter
-    // why exactly do we have this??
-    private val mData: MutableList<DataNumber> = emptyList<DataNumber>().toMutableList()
+    val mData: MutableList<DataNumber> = emptyList<DataNumber>().toMutableList()
+    get() = if (MessageController.isCleared) emptyList<DataNumber>().toMutableList() else field
+
+    private var isCleared = false
     var lastData = 0
     var runningTransactions: Int = 0
 
     fun clear() {
+        isCleared = true
         mAdapter.mData = emptyList()
         mAdapter.notifyDataSetChanged()
     }
@@ -23,6 +26,7 @@ object MessageController {
     }
 
     fun fetch(fromCache: Boolean) {
+        isCleared = false
         var addedData: List<DataNumber>
         if (fromCache) {
             StorageManager.getInstance().load()
