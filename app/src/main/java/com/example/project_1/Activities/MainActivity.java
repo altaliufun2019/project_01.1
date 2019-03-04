@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        StorageManager.Companion.getInstance().setContext(getApplicationContext());
+        StorageManager.INSTANCE.setContext(getApplicationContext());
 
         NotificationCenter.getInstance().register(this, Constants.Tasks.FETCH_DATA);
         NotificationCenter.getInstance().register(this, Constants.Tasks.CONNECTION_CHANGE);

@@ -6,7 +6,7 @@ import android.os.Looper
 import java.lang.Exception
 import java.util.concurrent.CountDownLatch
 
-class DispatchQueue(mThreadName: String): Thread() {
+class DispatchQueue(mThreadName: String) : Thread() {
     private lateinit var handler: Handler
     private lateinit var handlerThread: HandlerThread
     private val latch: CountDownLatch = CountDownLatch(1)
@@ -17,10 +17,10 @@ class DispatchQueue(mThreadName: String): Thread() {
     }
 
     fun post(job: Runnable) {
-        try{
+        try {
             latch.await()
             handler.post(job)
-        } catch (e: Exception){
+        } catch (e: Exception) {
             println("problem")
         }
     }

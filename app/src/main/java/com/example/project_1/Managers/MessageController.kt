@@ -29,7 +29,7 @@ object MessageController {
         isCleared = false
         var addedData: List<DataNumber>
         if (fromCache) {
-            StorageManager.instance.load()
+            StorageManager.load()
         }
         else {
             ConnectionManager.load(lastData)
@@ -38,7 +38,7 @@ object MessageController {
 
     fun onTransactionComplete(newList: List<DataNumber>, taskID: Int) {
         when(taskID) {
-            Constants.Tasks.GET_DATA -> StorageManager.instance.save(newList as ArrayList<DataNumber>)
+            Constants.Tasks.GET_DATA -> StorageManager.save(newList as ArrayList<DataNumber>)
             Constants.Tasks.REFRESH_DATA -> mData.clear()
         }
         mData.addAll(newList)
