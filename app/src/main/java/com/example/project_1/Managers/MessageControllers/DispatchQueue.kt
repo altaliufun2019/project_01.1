@@ -19,6 +19,7 @@ class DispatchQueue(mThreadName: String): Thread() {
             latch.await()
             handler.post(job)
         } catch (e: Exception){
+            println("problem")
         }
     }
 

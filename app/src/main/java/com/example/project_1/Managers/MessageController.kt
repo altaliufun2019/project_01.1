@@ -29,7 +29,7 @@ object MessageController {
         isCleared = false
         var addedData: List<DataNumber>
         if (fromCache) {
-            StorageManager.getInstance().load()
+            StorageManager.instance.load()
         }
         else {
             ConnectionManager.load(lastData)
@@ -37,12 +37,14 @@ object MessageController {
     }
 
     fun onTransactionComplete(newList: List<DataNumber>, taskID: Int) {
+
+        when(taskID) {
+            Constants.Tasks.GET_DATA -> StorageManager.instance.save(newList as ArrayList<DataNumber>)
+            Constants.Tasks.REFRESH_DATA -> mData.clear()
+        }
         mData.addAll(newList)
         lastData = mData.last().id
         runningTransactions--
-        when(taskID) {
-            Constants.Tasks.GET_DATA -> StorageManager.getInstance().save(newList as ArrayList<DataNumber>)
-        }
         println("${Thread.currentThread().name}: completed task [$taskID]")
         NotificationCenter.getInstance().data_loaded()
     }

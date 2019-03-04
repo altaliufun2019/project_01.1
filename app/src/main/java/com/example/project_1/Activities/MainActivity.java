@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.project_1.Constants.Constants;
 import com.example.project_1.Managers.NotificationCenter;
+import com.example.project_1.Managers.StorageManager;
 import com.example.project_1.UIComponents.DataAdapter.DataNumber;
 import com.example.project_1.UIComponents.DataAdapter.DataNumberAdapter;
 import com.example.project_1.Managers.MessageController;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements NotificationCente
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StorageManager.Companion.getInstance().setContext(getApplicationContext());
 
         NotificationCenter.getInstance().register(this, Constants.Tasks.FETCH_DATA);
         NotificationCenter.getInstance().register(this, Constants.Tasks.CONNECTION_CHANGE);
