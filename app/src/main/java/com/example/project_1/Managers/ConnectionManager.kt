@@ -8,11 +8,12 @@ import com.example.project_1.UIComponents.DataAdapter.DataNumber
 import java.util.*
 
 object ConnectionManager {
-    val mQueue: DispatchQueue = DispatchQueue("cloud")
-    val mainHandler = Handler(Looper.getMainLooper())
+    private val mQueue: DispatchQueue = DispatchQueue("cloud")
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     fun load(n: Int){
         mQueue.post( Runnable {
+            println("${Thread.currentThread().name} completed task")
             MessageController.runningTransactions++
             val response = _load(n)
             mainHandler.post{
@@ -22,13 +23,11 @@ object ConnectionManager {
     }
 
     private fun _load(n: Int): List<DataNumber> {
-        // TODO: for similar functionality to project's main idea, needs to be commented
         while (MessageController.runningTransactions != 1){
         }
         val n = MessageController.lastData
 
         Thread.sleep(100)
-        val new_list = List(10){index -> DataNumber(index + n + 1, Date()) }
-        return new_list
+        return List(10){ index -> DataNumber(index + n + 1, Date()) }
     }
 }

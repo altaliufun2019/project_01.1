@@ -37,14 +37,14 @@ object MessageController {
     }
 
     fun onTransactionComplete(newList: List<DataNumber>, taskID: Int) {
-
         when(taskID) {
             Constants.Tasks.GET_DATA -> StorageManager.instance.save(newList as ArrayList<DataNumber>)
             Constants.Tasks.REFRESH_DATA -> mData.clear()
         }
         mData.addAll(newList)
         lastData = mData.last().id
-        runningTransactions--
+        if (taskID.equals(Constants.Tasks.GET_DATA))
+            runningTransactions--
         println("${Thread.currentThread().name}: completed task [$taskID]")
         NotificationCenter.getInstance().data_loaded()
     }

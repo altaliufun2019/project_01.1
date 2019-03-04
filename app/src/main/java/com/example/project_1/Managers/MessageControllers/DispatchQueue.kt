@@ -1,12 +1,14 @@
 package com.example.project_1.Managers.MessageControllers
 
 import android.os.Handler
+import android.os.HandlerThread
 import android.os.Looper
 import java.lang.Exception
 import java.util.concurrent.CountDownLatch
 
 class DispatchQueue(mThreadName: String): Thread() {
     private lateinit var handler: Handler
+    private lateinit var handlerThread: HandlerThread
     private val latch: CountDownLatch = CountDownLatch(1)
 
     init {
@@ -24,9 +26,9 @@ class DispatchQueue(mThreadName: String): Thread() {
     }
 
     override fun run() {
-        Looper.prepare()
-        handler = Handler()
+        handlerThread = HandlerThread(name)
+        handlerThread.start()
+        handler = Handler(handlerThread.looper)
         latch.countDown()
-        Looper.loop()
     }
 }
